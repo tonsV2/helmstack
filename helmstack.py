@@ -86,8 +86,8 @@ def handle_repositories():
     stack = config.stack
     if stack['repositories']:
         for repository in stack['repositories']:
-            sh_exec("helm repo add %s %s" % (repository['name'], repository['url']))
-        sh_exec("helm repo update")
+            sh_exec("%s repo add %s %s" % (config.helm_binary, repository['name'], repository['url']))
+        sh_exec("%s repo update" % config.helm_binary)
 
 
 def sh_exec(cmd):
