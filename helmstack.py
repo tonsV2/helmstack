@@ -122,10 +122,12 @@ def helm(release):
     cmd += " upgrade"
     if 'name' not in release:
         raise Exception("Release missing name attribute")
-    cmd += " %s" % release['name']
+    name = release['name']
+    cmd += " %s" % name
     if 'chart' not in release:
         raise Exception("Release missing chart attribute")
-    cmd += " %s" % release['chart']
+    chart = release['chart']
+    cmd += " %s" % chart
     if 'namespace' in release:
         cmd += " --namespace %s" % release['namespace']
     if 'version' in release:
@@ -135,6 +137,5 @@ def helm(release):
     if config.force:
         cmd += " --force"
     cmd += " --install"
-    if config.debug:
-        print("Helm command: %s" % cmd)
+    print("Upgrade/install: %s - %s" % (name, chart))
     sh_exec(cmd)
