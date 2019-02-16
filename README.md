@@ -4,7 +4,7 @@ Helmstack is heavily inspired by [helmfile](https://github.com/roboll/helmfile).
 
 helmfile is a great project and way more advanced than helmstack. But I found it difficult to use when dealing with multiple chart versions spanning different environments.
 
-The idea behind helmstack is that you have a basic stack file for which you use overlays for different versions in different environments. Thus making it easy to deal with having one version in dev, another in test and disabling the same chart in prod.
+The idea behind helmstack is that you have a basic stack file for which you use overlays to handle different versions in different environments. Thus making it easy to deal with having one version in dev, another in test and disabling the same chart in prod.
 
 ## Setup
 ```bash
