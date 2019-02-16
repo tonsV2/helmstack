@@ -22,14 +22,6 @@ pip install --editable .
 
 Default stack file is `stackfile.yaml`
 ```yaml
-environments: # Optional
-  dev:
-    overlay:
-      - env/dev.yaml
-  prod:
-    overlay:
-      - env/prod.yaml
-
 releases:
   - name: web-env
     namespace: web
@@ -38,6 +30,14 @@ releases:
   - name: web-app
     namespace: web
     chart: chart/web-app
+
+environments: # Optional
+  dev:
+    overlay:
+      - env/dev.yaml
+  prod:
+    overlay:
+      - env/prod.yaml
 
 repositories: # Optional
   - name: chart
