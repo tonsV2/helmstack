@@ -69,3 +69,9 @@ So far this is a POC but tests should be written
 
 ### Skip repo's
 Add flag --skip-repos
+
+### Environment varialbes
+Support .env files and regular environment variables
+
+### Templating
+Support some sort of templating language... Maybe
