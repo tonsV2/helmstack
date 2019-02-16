@@ -59,6 +59,12 @@ releases:
     enabled: true
 ```
 
+## Release
+```bash
+python setup.py sdist bdist_wheel
+python -m twine upload dist/*
+```
+
 ## TODO
 ### Bug?
 Is it a bug the values can't start with "{{"?
