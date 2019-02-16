@@ -56,6 +56,8 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
     if config.stack['helmDefaults']:
         if config.stack['helmDefaults']['recreatePods']:
             config.recreate_pods = config.stack['helmDefaults']['recreatePods']
+        if config.stack['helmDefaults']['force']:
+            config.force = config.stack['helmDefaults']['force']
 
     handle_repositories()
     if config.environment:
