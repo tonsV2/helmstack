@@ -11,6 +11,7 @@ class Config(object):
         self.file = None
         self.debug = False
         self.stack = None
+        self.overlay = None
         self.recreate_pods = False
         self.force = False
 
@@ -50,6 +51,31 @@ def cli(environment, context, helm_binary, file, debug):
             config.recreate_pods = config.stack['helmDefaults']['recreatePods']
 
     handle_repositories()
+    merge_overlays()
+
+    pprint.pprint(config.stack)
+
+
+def merge_overlays():
+    if not config.environment:
+        raise Exception("Environment not specified!")
+    overlay_file = "env/%s.yaml" % config.environment
+    with open(overlay_file, 'r') as stream:
+        try:
+            config.overlay = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+    if config.debug:
+        pprint.pprint(config.overlay)
+    merge(config.stack['releases'], config.overlay['releases'])
+
+
+def merge(releases, overlays):
+    for release in releases:
+        name = release['name']
+        release_overlay = overlays[name]
+        for k in release_overlay:
+            release[k] = release_overlay[k]
 
 
 def handle_repositories():
