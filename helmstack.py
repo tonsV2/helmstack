@@ -58,7 +58,8 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
             config.recreate_pods = config.stack['helmDefaults']['recreatePods']
 
     handle_repositories()
-    merge_overlays()
+    if config.environment:
+        merge_overlays()
     sync_releases()
 
 
