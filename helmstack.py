@@ -59,15 +59,16 @@ def cli(environment, context, helm_binary, file, debug):
 def merge_overlays():
     if not config.environment:
         raise Exception("Environment not specified!")
-    overlay_file = "env/%s.yaml" % config.environment
-    with open(overlay_file, 'r') as stream:
-        try:
-            config.overlay = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    if config.debug:
-        pprint.pprint(config.overlay)
-    merge(config.stack['releases'], config.overlay['releases'])
+    overlay_files = config.stack['environments'][config.environment]['overlay']
+    for overlay_file in overlay_files:
+        with open(overlay_file, 'r') as stream:
+            try:
+                config.overlay = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+        if config.debug:
+            pprint.pprint(config.overlay)
+        merge(config.stack['releases'], config.overlay['releases'])
 
 
 def merge(releases, overlays):
