@@ -23,7 +23,7 @@ class Config(object):
 config = Config()
 
 
-@click.command()
+@click.group()
 @click.option('--environment', '-e', default=None, help='Specify target environment')
 @click.option('--context', '-c', default=None, help='kubectl context')
 @click.option('--helm-binary', '-b', default='helm', help='Path to helm binary')
@@ -62,13 +62,18 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
     handle_repositories()
     if config.environment:
         merge_overlays()
-    sync_releases()
 
 
-def sync_releases():
+@cli.command('sync')
+def sync():
     for release in config.stack['releases']:
-        if 'enabled' in release and release['enabled']:
-            helm(release)
+        if ('enabled' in release and release['enabled']) or 'enabled' not in release:
+            helm_upgrade(release)
+
+
+@cli.command('template')
+def template():
+    raise Exception("Not implemented yet")
 
 
 def merge_overlays():
@@ -110,7 +115,7 @@ def handle_repositories():
         sh_exec("%s repo update" % config.helm_binary)
 
 
-def helm(release):
+def helm_upgrade(release):
     cmd = config.helm_binary
     if config.context:
         cmd += " --kube-context %s" % config.context
