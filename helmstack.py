@@ -33,10 +33,6 @@ def cli(environment, context, helm_binary, file, debug):
     config.file = file
     config.debug = debug
 
-    if config.stack['helmDefaults']:
-        if config.stack['helmDefaults']['recreatePods']:
-            config.recreate_pods = config.stack['helmDefaults']['recreatePods']
-
     print("Environment: %s" % environment)
     print("Context: %s" % context)
     print("Stack file: %s" % file.name)
@@ -48,6 +44,10 @@ def cli(environment, context, helm_binary, file, debug):
         config.stack = stack
     except yaml.YAMLError as exc:
         print(exc)
+
+    if config.stack['helmDefaults']:
+        if config.stack['helmDefaults']['recreatePods']:
+            config.recreate_pods = config.stack['helmDefaults']['recreatePods']
 
     handle_repositories()
 
