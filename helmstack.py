@@ -143,7 +143,6 @@ def sh_exec(cmd):
     if config.debug:
         print("Shell command: %s" % cmd)
     if config.dry_run:
-        print("Dry run enabled. Command not executed.")
         return
     p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
     while True:
