@@ -13,6 +13,7 @@ class Config(object):
         self.helm_binary = None
         self.file = None
         self.debug = False
+        self.dry_run = False
         self.stack = None
         self.overlay = None
         self.recreate_pods = False
@@ -28,7 +29,8 @@ config = Config()
 @click.option('--helm-binary', '-b', default='helm', help='Path to helm binary')
 @click.option('--file', '-f', type=click.File('r'), default='helmstack.yaml', help='Specify stack file')
 @click.option('--debug', is_flag=True, help='Enable debug')
-def cli(environment, context, helm_binary, file, debug):
+@click.option('--dry-run', is_flag=True, help='Don\'t execute commands')
+def cli(environment, context, helm_binary, file, debug, dry_run):
     """This script run helm commands"""
 
     config.environment = environment
@@ -36,6 +38,7 @@ def cli(environment, context, helm_binary, file, debug):
     config.helm_binary = helm_binary
     config.file = file
     config.debug = debug
+    config.dry_run = dry_run
 
     print("Environment: %s" % environment)
     print("Context: %s" % context)
@@ -129,6 +132,9 @@ def helm(release):
 def sh_exec(cmd):
     if config.debug:
         print("Shell command: %s" % cmd)
+    if config.dry_run:
+        print("Dry run enabled. Command not executed.")
+        return
     p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
     while True:
         out = p.stderr.read(1)
