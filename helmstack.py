@@ -126,6 +126,9 @@ def helm(release):
     if config.force:
         cmd += " --force"
     cmd += " --install"
+    if 'values' in release:
+        for value in release['values']:
+            cmd += " --values %s" % value
     print("Upgrade/install: %s - %s" % (name, chart))
     sh_exec(cmd)
 
