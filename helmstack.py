@@ -53,6 +53,13 @@ def cli(environment, context, helm_binary, file, debug):
 
     handle_repositories()
     merge_overlays()
+    sync_releases()
+
+
+def sync_releases():
+    for release in config.stack['releases']:
+        if 'enabled' in release and release['enabled']:
+            helm(release)
 
 
 def merge_overlays():
@@ -94,8 +101,26 @@ def sh_exec(cmd):
     print(cmd)
 
 
-def helm(cmd):
-    context = "--kube-context %s" % config.context if config.context else ""
-    recreate_pods = "--recreate-pods" if config.recreate_pods else ""
-    force = "--force" if config.recreate_pods else ""
-    sh_exec("%s %s %s %s %s" % (config.helm_binary, context, cmd, recreate_pods, force))
+def helm(release):
+    cmd = config.helm_binary
+    if config.context:
+        cmd += " --kube-context %s" % config.context
+    cmd += " upgrade"
+    if 'name' not in release:
+        raise Exception("Release missing name attribute")
+    cmd += " %s" % release['name']
+    if 'chart' not in release:
+        raise Exception("Release missing chart attribute")
+    cmd += " %s" % release['chart']
+    if 'namespace' in release:
+        cmd += " --namespace %s" % release['namespace']
+    if 'version' in release:
+        cmd += " --version %s" % release['version']
+    if config.recreate_pods:
+        cmd += " --recreate-pods"
+    if config.force:
+        cmd += " --force"
+    cmd += " --install"
+    if config.debug:
+        print("Helm command: %s" % cmd)
+    sh_exec(cmd)
