@@ -102,7 +102,11 @@ def handle_repositories():
     stack = config.stack
     if stack['repositories']:
         for repository in stack['repositories']:
-            sh_exec("%s repo add %s %s" % (config.helm_binary, repository['name'], repository['url']))
+            name = repository['name']
+            url = repository['url']
+            print("Adding repo %s %s" % (name, url))
+            sh_exec("%s repo add %s %s" % (config.helm_binary, name, url))
+            print("Repository added!")
         sh_exec("%s repo update" % config.helm_binary)
 
 
@@ -131,7 +135,7 @@ def helm(release):
     if 'values' in release:
         for value in release['values']:
             cmd += " --values %s" % value
-    print("Upgrade/install: %s - %s" % (name, chart))
+    print("Upgrading: %s (%s)" % (name, chart))
     sh_exec(cmd)
 
 
