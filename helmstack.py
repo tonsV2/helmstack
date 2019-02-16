@@ -6,7 +6,7 @@ import pprint
 @click.command()
 @click.option('--environment', '-e', default=None, help='Specify target environment')
 @click.option('--file', '-f', type=click.File('r'), default='helmstack.yaml', help='Specify stack file')
-@click.option('--debug', default=False, help='Enable debug')
+@click.option('--debug', is_flag=True, help='Enable debug')
 def cli(environment, file, debug):
     """This script run helm commands"""
     print("Environment: %s" % environment)
