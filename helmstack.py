@@ -41,6 +41,7 @@ def cli(environment, context, helm_binary, file, debug):
     try:
         stack = yaml.safe_load(file)
         if debug:
+            print("Stack:")
             pprint.pprint(stack)
         config.stack = stack
     except yaml.YAMLError as exc:
@@ -52,8 +53,6 @@ def cli(environment, context, helm_binary, file, debug):
 
     handle_repositories()
     merge_overlays()
-
-    pprint.pprint(config.stack)
 
 
 def merge_overlays():
@@ -67,8 +66,12 @@ def merge_overlays():
             except yaml.YAMLError as exc:
                 print(exc)
         if config.debug:
+            print("Overlay:")
             pprint.pprint(config.overlay)
         merge(config.stack['releases'], config.overlay['releases'])
+        if config.debug:
+            print("Merged stack:")
+            pprint.pprint(config.stack)
 
 
 def merge(releases, overlays):
