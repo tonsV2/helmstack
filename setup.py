@@ -5,7 +5,8 @@ setup(
     version='1.0.0',
     py_modules=['hello'],
     install_requires=[
-        'click'
+        'click',
+        'ruamel.yaml'
     ],
     entry_points='''
         [console_scripts]
