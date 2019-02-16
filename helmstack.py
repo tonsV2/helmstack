@@ -66,6 +66,7 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
 
 @cli.command('sync')
 def sync():
+    """Synchronise everything listed in the state file"""
     for release in config.stack['releases']:
         if ('enabled' in release and release['enabled']) or 'enabled' not in release:
             helm_upgrade(release)
@@ -73,6 +74,7 @@ def sync():
 
 @cli.command('template')
 def template():
+    """Locally render templates"""
     raise Exception("Not implemented yet")
 
 
