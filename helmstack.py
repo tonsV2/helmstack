@@ -100,21 +100,6 @@ def handle_repositories():
         sh_exec("%s repo update" % config.helm_binary)
 
 
-def sh_exec(cmd):
-    if config.debug:
-        print("Shell command: %s" % cmd)
-    p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
-    while True:
-        out = p.stderr.read(1)
-        if out == b'' and p.poll() is not None:
-            break
-        if out != b'':
-            sys.stdout.buffer.write(out)
-            sys.stdout.flush()
-    if p.returncode != 0:
-        raise Exception("None zero return code")
-
-
 def helm(release):
     cmd = config.helm_binary
     if config.context:
@@ -139,3 +124,18 @@ def helm(release):
     cmd += " --install"
     print("Upgrade/install: %s - %s" % (name, chart))
     sh_exec(cmd)
+
+
+def sh_exec(cmd):
+    if config.debug:
+        print("Shell command: %s" % cmd)
+    p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+    while True:
+        out = p.stderr.read(1)
+        if out == b'' and p.poll() is not None:
+            break
+        if out != b'':
+            sys.stdout.buffer.write(out)
+            sys.stdout.flush()
+    if p.returncode != 0:
+        raise Exception("None zero return code")
