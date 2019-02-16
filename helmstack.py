@@ -1,6 +1,9 @@
+import pprint
+import subprocess
+import sys
+
 import click
 import ruamel.yaml as yaml
-import pprint
 
 
 class Config(object):
@@ -98,7 +101,18 @@ def handle_repositories():
 
 
 def sh_exec(cmd):
-    print(cmd)
+    if config.debug:
+        print("Shell command: %s" % cmd)
+    p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+    while True:
+        out = p.stderr.read(1)
+        if out == b'' and p.poll() is not None:
+            break
+        if out != b'':
+            sys.stdout.buffer.write(out)
+            sys.stdout.flush()
+    if p.returncode != 0:
+        raise Exception("None zero return code")
 
 
 def helm(release):
