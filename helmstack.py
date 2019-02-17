@@ -79,9 +79,14 @@ def template():
 
 
 def merge_overlays():
-    if not config.environment:
-        raise Exception("Environment not specified!")
-    overlay_files = config.stack['environments'][config.environment]['overlay']
+    if 'environments' not in config.stack:
+        raise Exception("No environments found!")
+    environment = config.environment
+    if environment not in config.stack['environments']:
+        raise Exception("Environment '%s' not found!" % environment)
+    if 'overlay' not in config.stack['environments'][environment]:
+        raise Exception("No overlay found in environment '%s'!" % environment)
+    overlay_files = config.stack['environments'][environment]['overlay']
     for overlay_file in overlay_files:
         with open(overlay_file, 'r') as stream:
             try:
