@@ -81,3 +81,6 @@ Support .env files and regular environment variables
 
 ### Templating
 Support some sort of templating language... Maybe
+
+### s/overlay/overlays/ ?
+Either stop supporting multiple overlay files or rename key to overlays
