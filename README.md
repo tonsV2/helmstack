@@ -18,7 +18,7 @@ source venv/bin/activate
 pip install --editable .
 ```
 
-## Stack file exmaple
+## Stack file example
 
 Default stack file is `stackfile.yaml`
 ```yaml
