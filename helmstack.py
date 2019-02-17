@@ -53,11 +53,12 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
     except yaml.YAMLError as exc:
         print(exc)
 
-    if config.stack['helmDefaults']:
-        if config.stack['helmDefaults']['recreatePods']:
-            config.recreate_pods = config.stack['helmDefaults']['recreatePods']
-        if config.stack['helmDefaults']['force']:
-            config.force = config.stack['helmDefaults']['force']
+    helm_defaults = config.stack['helmDefaults']
+    if helm_defaults:
+        if helm_defaults['recreatePods']:
+            config.recreate_pods = helm_defaults['recreatePods']
+        if helm_defaults['force']:
+            config.force = helm_defaults['force']
 
     handle_repositories()
     if config.environment:
