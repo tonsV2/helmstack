@@ -66,9 +66,6 @@ python -m twine upload dist/*
 ```
 
 ## TODO
-### Bug?
-Is it a bug the values can't start with "{{"?
-https://bitbucket.org/ruamel/yaml/issues?status=new&status=open
 
 ### Write tests
 So far this is a POC but tests should be written
