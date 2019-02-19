@@ -60,7 +60,6 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
         if helm_defaults['force']:
             config.force = helm_defaults['force']
 
-    handle_repositories()
     if config.environment:
         merge_overlays()
 
@@ -68,6 +67,8 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
 @cli.command('sync')
 def sync():
     """Synchronise everything listed in the state file"""
+    handle_repositories()
+
     for release in config.stack['releases']:
         if ('enabled' in release and release['enabled']) or 'enabled' not in release:
             helm_upgrade(release)
