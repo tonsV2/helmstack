@@ -1,4 +1,6 @@
+import os
 import pprint
+import re
 import subprocess
 import sys
 
@@ -62,6 +64,25 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
 
     if config.environment:
         merge_overlays()
+
+    interpolate_envs()
+
+
+def interpolate_envs():
+    replace(config.stack['releases'])
+    replace(config.stack['repositories'])
+
+
+def replace(target):
+    for release in target:
+        for k, v in release.items():
+            if isinstance(v, str):
+                groups = re.findall(r'\${(.*?)}', v)
+                for var in groups:
+                    if var not in os.environ:
+                        raise Exception("%s not found in environment" % var)
+                    value = os.getenv(var)
+                    release[k] = v.replace("${%s}" % var, value)
 
 
 @cli.command('sync')
