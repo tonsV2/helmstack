@@ -7,7 +7,8 @@ setup(
     py_modules=['helmstack'],
     install_requires=[
         'click',
-        'ruamel.yaml'
+        'ruamel.yaml',
+        'python-dotenv'
     ],
     entry_points='''
         [console_scripts]

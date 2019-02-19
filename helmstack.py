@@ -3,9 +3,11 @@ import pprint
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 import click
 import ruamel.yaml as yaml
+from dotenv import load_dotenv
 
 
 class Config(object):
@@ -69,6 +71,9 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
 
 
 def interpolate_envs():
+    env_path = Path('.') / '.env'
+    load_dotenv(dotenv_path=env_path)
+
     replace(config.stack['releases'])
     replace(config.stack['repositories'])
 
