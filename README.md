@@ -78,3 +78,20 @@ Support some sort of templating language... Maybe
 
 ### s/overlay/overlays/ ?
 Either stop supporting multiple overlay files or rename key to overlays
+
+### Support referencing charts by urls... git urls
+
+### .helmstack file for defaults
+environment: dev
+context: ml-dev
+some: thing
+
+### Stacks?
+stacks:
+ - name: sud
+   url: git...
+ - name: elk
+   url: git...
+
+### Support multiple stack files?
+helmstack ... -f elk.yaml -f whoami.yaml sync
