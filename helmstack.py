@@ -12,6 +12,7 @@ class Config(object):
         self.context = None
         self.helm_binary = None
         self.file = None
+        self.skip_repos = False
         self.debug = False
         self.dry_run = False
         self.stack = None
@@ -28,15 +29,17 @@ config = Config()
 @click.option('--context', '-c', default=None, help='kubectl context')
 @click.option('--helm-binary', '-b', default='helm', help='Path to helm binary')
 @click.option('--file', '-f', type=click.File('r'), default='helmstack.yaml', help='Specify stack file')
+@click.option('--skip-repos', is_flag=True, help='Skip adding repositories')
 @click.option('--debug', is_flag=True, help='Enable debug')
 @click.option('--dry-run', is_flag=True, help='Don\'t execute commands')
-def cli(environment, context, helm_binary, file, debug, dry_run):
+def cli(environment, context, helm_binary, file, skip_repos, debug, dry_run):
     """This script run helm commands"""
 
     config.environment = environment
     config.context = context
     config.helm_binary = helm_binary
     config.file = file
+    config.skip_repos = skip_repos
     config.debug = debug
     config.dry_run = dry_run
 
@@ -67,7 +70,8 @@ def cli(environment, context, helm_binary, file, debug, dry_run):
 @cli.command('sync')
 def sync():
     """Synchronise everything listed in the state file"""
-    handle_repositories()
+    if not config.skip_repos:
+        handle_repositories()
 
     for release in config.stack['releases']:
         if ('enabled' in release and release['enabled']) or 'enabled' not in release:
