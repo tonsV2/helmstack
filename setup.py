@@ -4,6 +4,7 @@ setup(
     name='helmstack',
     version='1.1.1',
     description='See https://github.com/tonsV2/helmstack',
+    python_requires='>=3',
     py_modules=['helmstack'],
     install_requires=[
         'click',
