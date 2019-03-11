@@ -1,0 +1,8 @@
+releases:
+  - name: whoami
+    namespace: whoami
+    chart: fitfit/whoami
+
+repositories:
+  - name: fitfit
+    url: https://chartmuseum.fitfit.dk
