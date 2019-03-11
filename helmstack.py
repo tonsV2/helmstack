@@ -60,9 +60,9 @@ def cli(environment, context, helm_binary, file, skip_repos, debug, dry_run):
     if 'helmDefaults' in stack:
         helm_defaults = stack['helmDefaults']
         if helm_defaults:
-            if helm_defaults['recreatePods']:
+            if 'recreatePods' in helm_defaults:
                 config.recreate_pods = helm_defaults['recreatePods']
-            if helm_defaults['force']:
+            if 'force' in helm_defaults:
                 config.force = helm_defaults['force']
 
     if config.environment:
