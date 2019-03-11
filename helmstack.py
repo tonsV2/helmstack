@@ -95,12 +95,6 @@ def sync(targets, recreate_pods):
             helm_upgrade(release)
 
 
-@cli.command('template')
-def template():
-    """Locally render templates"""
-    exit_with_error("Not implemented yet")
-
-
 def merge_overlays():
     if 'environments' not in config.stack:
         exit_with_error("No environments found!")
