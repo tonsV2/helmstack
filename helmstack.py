@@ -98,18 +98,18 @@ def sync(targets, recreate_pods):
 @cli.command('template')
 def template():
     """Locally render templates"""
-    raise Exception("Not implemented yet")
+    exit_with_error("Not implemented yet")
 
 
 def merge_overlays():
     if 'environments' not in config.stack:
-        raise Exception("No environments found!")
+        exit_with_error("No environments found!")
     environment = config.environment
     environments = config.stack['environments']
     if environment not in environments:
-        raise Exception("Environment '%s' not found!" % environment)
+        exit_with_error("Environment '%s' not found!" % environment)
     if 'overlay' not in environments[environment]:
-        raise Exception("No overlay found in environment '%s'!" % environment)
+        exit_with_error("No overlay found in environment '%s'!" % environment)
     overlay_files = environments[environment]['overlay']
     for overlay_file in overlay_files:
         with open(overlay_file, 'r') as stream:
@@ -153,11 +153,11 @@ def helm_upgrade(release):
         cmd += " --kube-context %s" % config.context
     cmd += " upgrade"
     if 'name' not in release:
-        raise Exception("Release missing name attribute")
+        exit_with_error("Release missing name attribute")
     name = release['name']
     cmd += " %s" % name
     if 'chart' not in release:
-        raise Exception("Release missing chart attribute")
+        exit_with_error("Release missing chart attribute")
     chart = release['chart']
     cmd += " %s" % chart
     if 'namespace' in release:
@@ -190,4 +190,8 @@ def sh_exec(cmd):
             sys.stdout.buffer.write(out)
             sys.stdout.flush()
     if p.returncode != 0:
-        raise Exception("None zero return code")
+        exit_with_error("Helm returned non-zero return code")
+
+
+def exit_with_error(err_msg):
+    sys.exit("Error: %s" % err_msg)
