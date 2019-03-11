@@ -53,10 +53,10 @@ helmDefaults: # Optional
 releases:
   web-env:
     version: 1.7.0
-    enabled: true
+    ignore: false
   web-app:
     version: 1.39.0
-    enabled: true
+    ignore: true
 ```
 
 ## Release

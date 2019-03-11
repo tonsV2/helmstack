@@ -91,7 +91,7 @@ def sync(targets, recreate_pods):
         handle_repositories()
 
     for release in config.stack['releases']:
-        if ('enabled' in release and release['enabled']) or 'enabled' not in release:
+        if ('ignore' in release and not release['ignore']) or 'ignore' not in release:
             helm_upgrade(release)
 
 
