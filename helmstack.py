@@ -56,12 +56,14 @@ def cli(environment, context, helm_binary, file, skip_repos, debug, dry_run):
     except yaml.YAMLError as exc:
         print(exc)
 
-    helm_defaults = config.stack['helmDefaults']
-    if helm_defaults:
-        if helm_defaults['recreatePods']:
-            config.recreate_pods = helm_defaults['recreatePods']
-        if helm_defaults['force']:
-            config.force = helm_defaults['force']
+    stack = config.stack
+    if 'helmDefaults' in stack:
+        helm_defaults = stack['helmDefaults']
+        if helm_defaults:
+            if helm_defaults['recreatePods']:
+                config.recreate_pods = helm_defaults['recreatePods']
+            if helm_defaults['force']:
+                config.force = helm_defaults['force']
 
     if config.environment:
         merge_overlays()
