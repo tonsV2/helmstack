@@ -95,6 +95,32 @@ def sync(targets, recreate_pods):
             helm_upgrade(release)
 
 
+@cli.command()
+@click.option('--purge', is_flag=True, help='Purge releases')
+@click.argument('targets', nargs=-1, default=None)
+def delete(targets, purge):
+    """Delete everything listed in the state file"""
+
+    trim_releases(targets)
+    for release in config.stack['releases']:
+        helm_delete(release, purge)
+
+
+def helm_delete(release, purge):
+    cmd = config.helm_binary
+    if config.context:
+        cmd += " --kube-context %s" % config.context
+    cmd += " delete"
+    if purge:
+        cmd += " --purge"
+    if 'name' not in release:
+        exit_with_error("Release missing name attribute")
+    name = release['name']
+    cmd += " %s" % name
+    print("Deleting: %s" % name)
+    sh_exec(cmd)
+
+
 def merge_overlays():
     if 'environments' not in config.stack:
         exit_with_error("No environments found!")
