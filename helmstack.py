@@ -132,7 +132,7 @@ def merge(releases, overlays):
 
 def handle_repositories():
     stack = config.stack
-    if stack['repositories']:
+    if 'repositories' in stack:
         for repository in stack['repositories']:
             name = repository['name']
             url = repository['url']
