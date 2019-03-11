@@ -80,9 +80,12 @@ def trim_releases(targets):
 
 
 @cli.command()
+@click.option('--recreate-pods', is_flag=True, help='Recreate pods')
 @click.argument('targets', nargs=-1, default=None)
-def sync(targets):
+def sync(targets, recreate_pods):
     """Synchronise everything listed in the state file"""
+    config.recreate_pods = recreate_pods
+
     trim_releases(targets)
     if not config.skip_repos:
         handle_repositories()
