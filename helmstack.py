@@ -150,9 +150,9 @@ def merge(releases, overlays):
     for release in releases:
         name = release['name']
         if name in overlays:
-            release_overlay = overlays[name]
-            for k in release_overlay:
-                release[k] = release_overlay[k]
+            overlay = overlays[name]
+            for k in overlay:
+                release[k] = overlay[k]
 
 
 def handle_repositories():
