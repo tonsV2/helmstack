@@ -1,3 +1,4 @@
+import collections.abc as collections_abc
 import pprint
 import subprocess
 import sys
@@ -148,12 +149,24 @@ def merge_overlays():
 
 
 def merge(releases, overlays):
+    def dict_merge(left, right):
+        """
+        Inspiration: https://gist.github.com/angstwad/bf22d1822c38a92ec0a9
+        """
+        for k, v in right.items():
+            if isinstance(left.get(k), dict) and isinstance(v, collections_abc.Mapping):
+                left[k] = dict_merge(left[k], v)
+            elif isinstance(left.get(k), list):
+                left[k] = left[k] + v
+            else:
+                left[k] = v
+        return left
+
     for release in releases:
         name = release['name']
         if name in overlays:
             overlay = overlays[name]
-            for k in overlay:
-                release[k] = overlay[k]
+            dict_merge(release, overlay)
 
 
 def handle_repositories():
