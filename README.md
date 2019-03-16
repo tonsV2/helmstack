@@ -95,3 +95,10 @@ stacks:
 
 ### Support multiple stack files?
 helmstack ... -f elk.yaml -f whoami.yaml sync
+
+### values.yaml.gotmpl
+Parse *.yaml.gotmpl files and use the output as value files
+This could be handy when inlining xml, certs and other kind of files
+
+https://github.com/powerman/gotmpl
+https://github.com/subfuzion/envtpl
