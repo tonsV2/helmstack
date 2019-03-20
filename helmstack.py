@@ -84,6 +84,7 @@ def trim_releases(targets):
 @click.argument('targets', nargs=-1, default=None)
 def sync(targets, recreate_pods):
     """Synchronise everything listed in the state file"""
+
     config.recreate_pods = recreate_pods
 
     trim_releases(targets)
