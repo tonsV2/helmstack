@@ -106,9 +106,13 @@ def sync(targets, recreate_pods, keep_tmp_value_files):
 
 @cli.command()
 @click.option('--purge', is_flag=True, help='Purge releases')
+@click.option('--all', is_flag=True, help='Confirm complete stack deletion')
 @click.argument('targets', nargs=-1, default=None)
-def delete(targets, purge):
+def delete(targets, purge, all):
     """Delete everything listed in the state file"""
+
+    if not targets and not all:
+        exit_with_error("Can't delete entire stack without --all")
 
     if config.environment:
         merge_overlays()
