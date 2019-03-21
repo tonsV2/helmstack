@@ -104,7 +104,7 @@ def delete(targets, purge, all):
     """Delete everything listed in the state file"""
 
     if not targets and not all:
-        exit_with_error("Can't delete entire stack without --all")
+        exit_with_error("Can't delete entire stack without passing --all")
 
     if config.environment:
         merge_overlays()
