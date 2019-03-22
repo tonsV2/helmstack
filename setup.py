@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='helmstack',
-    version='1.6.1',
+    version='1.6.2',
     description='See https://github.com/tonsV2/helmstack',
     python_requires='>=3',
     py_modules=['helmstack'],
