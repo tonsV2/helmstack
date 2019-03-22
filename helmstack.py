@@ -266,6 +266,7 @@ def unlink_garbage_files():
     if not config.keep_tmp_value_files:
         for file in config.garbage_files:
             os.unlink(file)
+        config.garbage_files = []
 
 
 def sh_exec(cmd):
