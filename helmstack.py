@@ -287,3 +287,7 @@ def sh_exec(cmd):
 
 def exit_with_error(err_msg):
     sys.exit("Error: %s" % err_msg)
+
+
+if __name__ == '__main__':
+    cli()
