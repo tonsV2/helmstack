@@ -101,7 +101,18 @@ def sync(targets, recreate_pods, keep_tmp_value_files):
 
     for release in config.stack['releases']:
         if ('ignore' in release and not release['ignore']) or 'ignore' not in release:
+            transform_set_to_file(release)
             helm_upgrade(release)
+
+
+def transform_set_to_file(release):
+    if 'set' in release:
+        set_file = to_file(release['set'])
+        config.garbage_files.append(set_file)
+        if 'values' in release:
+            release['values'].append(set_file)
+        else:
+            release['values'] = [set_file]
 
 
 @cli.command()
@@ -193,18 +204,8 @@ def merge(releases, overlays):
             overlay = overlays[name]
             values = merge_values(overlay, release)
             dict_merge(release, overlay)
-
-        transform_set_to_file(release, values)
-
         if values:
             release['values'] = values
-
-
-def transform_set_to_file(release, values):
-    if 'set' in release:
-        set_file = to_file(release['set'])
-        config.garbage_files.append(set_file)
-        values.append(set_file)
 
 
 def handle_repositories():
