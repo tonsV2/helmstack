@@ -262,6 +262,8 @@ def helm_upgrade(release):
     unlink_garbage_files()
 
 
+# TODO: Not my proudest code. There will always be only one set file and therefor only one garbage file. Also the logic
+#  for this is scattered all over this file
 def unlink_garbage_files():
     if not config.keep_tmp_value_files:
         for file in config.garbage_files:
