@@ -271,7 +271,7 @@ def unlink_garbage_files():
 
 def sh_exec(cmd):
     if config.debug:
-        print("Shell command: %s" % cmd)
+        print("Command: %s" % cmd)
     if config.dry_run:
         return
     p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
