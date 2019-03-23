@@ -103,6 +103,7 @@ def sync(targets, recreate_pods, keep_tmp_value_files):
         if ('ignore' in release and not release['ignore']) or 'ignore' not in release:
             transform_set_to_file(release)
             helm_upgrade(release)
+    unlink_garbage_files()
 
 
 def transform_set_to_file(release):
@@ -113,6 +114,15 @@ def transform_set_to_file(release):
             release['values'].append(set_file)
         else:
             release['values'] = [set_file]
+
+
+# TODO: Not my proudest code. There will always be only one set file and therefor only one garbage file. Also the logic
+#  for this is scattered all over this file
+def unlink_garbage_files():
+    if not config.keep_tmp_value_files:
+        for file in config.garbage_files:
+            os.unlink(file)
+        config.garbage_files = []
 
 
 @cli.command()
@@ -259,16 +269,6 @@ def helm_upgrade(release):
                 cmd += " --values %s" % value
     print("Upgrading: %s (%s)" % (name, chart))
     sh_exec(cmd)
-    unlink_garbage_files()
-
-
-# TODO: Not my proudest code. There will always be only one set file and therefor only one garbage file. Also the logic
-#  for this is scattered all over this file
-def unlink_garbage_files():
-    if not config.keep_tmp_value_files:
-        for file in config.garbage_files:
-            os.unlink(file)
-        config.garbage_files = []
 
 
 def sh_exec(cmd):
