@@ -4,18 +4,12 @@ Helmstack is heavily inspired by [helmfile](https://github.com/roboll/helmfile).
 
 helmfile is a great project and way more advanced than helmstack. But I found it difficult to use when dealing with multiple chart versions spanning different environments.
 
-The idea behind helmstack is that you have a basic stack file for which you use overlays to handle different versions in different environments. Thus making it easy to deal with having one version in dev, another in test and disabling the same chart in prod.
+The idea behind helmstack is that you have a basic stack file for which you use overlays to handle different versions in different environments.
+Thus making it easy to deal with having one version in dev, another in test and disabling the same chart in prod.
 
 ## Install
 ```bash
 pip install helmstack
-```
-
-## Development setup
-```bash
-virtualenv venv
-source venv/bin/activate
-pip install --editable .
 ```
 
 ## Stack file example
@@ -26,6 +20,10 @@ releases:
   - name: web-env
     namespace: web
     chart: chart/web-env
+    values:
+      - web-env.yaml
+    set:
+      some: value
 
   - name: web-app
     namespace: web
@@ -53,10 +51,18 @@ helmDefaults: # Optional
 releases:
   web-env:
     version: 1.7.0
-    ignore: false
+    set:
+      some: new-value
   web-app:
     version: 1.39.0
     ignore: true
+```
+
+## Development setup
+```bash
+virtualenv venv
+source venv/bin/activate
+pip install --editable .
 ```
 
 ## Release
