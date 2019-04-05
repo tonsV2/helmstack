@@ -24,6 +24,8 @@ releases:
       - web-env.yaml
     set:
       some: value
+      yet:
+        another: value
 
   - name: web-app
     namespace: web
