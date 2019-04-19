@@ -110,3 +110,9 @@ This could be handy when inlining xml, certs and other kind of files
 
 https://github.com/powerman/gotmpl
 https://github.com/subfuzion/envtpl
+
+### Variables?
+variables:
+  name: value
+
+And then use the above as ${name}?
