@@ -98,7 +98,7 @@ def trim_releases(targets):
 @click.option('--keep-tmp-value-files', is_flag=True, help='Don\'t clean up tmp value files')
 @click.argument('targets', nargs=-1, default=None)
 def sync(targets, recreate_pods, keep_tmp_value_files):
-    """Synchronise everything listed in the state file"""
+    """Synchronise one or more releases"""
 
     config.recreate_pods = recreate_pods
     config.keep_tmp_value_files = keep_tmp_value_files
@@ -140,7 +140,7 @@ def unlink_garbage_files():
 @click.option('--all', is_flag=True, help='Confirm complete stack deletion')
 @click.argument('targets', nargs=-1, default=None)
 def delete(targets, purge, all):
-    """Delete everything listed in the state file"""
+    """Delete one or more releases"""
 
     if not targets and not all:
         exit_with_error("Can't delete entire stack without passing --all")
@@ -171,7 +171,7 @@ def helm_delete(release, purge):
 @cli.command()
 @click.argument('targets', nargs=-1, default=None)
 def get(targets):
-    """Get everything listed in the state file"""
+    """Show actual resources present in the cluster"""
 
     if config.environment:
         merge_overlays()
