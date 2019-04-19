@@ -73,13 +73,24 @@ def cli(environment, context, helm_binary, file, skip_repos, debug, dry_run):
 
 
 def trim_releases(targets):
-    if len(targets):
-        stack = config.stack
-        releases = stack['releases']
-        stack['releases'] = [release for release in releases if release['name'] in targets]
-        if config.debug:
-            print("Trimmed stack:")
-            pprint.pprint(config.stack)
+    def trim_ignored(stack):
+        releases = [release for release in stack['releases'] if not release.get('ignore', False)]
+        return releases
+
+    def trim_non_targets(releases, targets):
+        if len(targets):
+            releases = [release for release in releases if release['name'] in targets]
+        return releases
+
+    stack = config.stack
+    releases = trim_ignored(stack)
+    releases = trim_non_targets(releases, targets)
+
+    stack['releases'] = releases
+
+    if config.debug:
+        print("Trimmed stack:")
+        pprint.pprint(config.stack)
 
 
 @cli.command()
@@ -100,9 +111,8 @@ def sync(targets, recreate_pods, keep_tmp_value_files):
         handle_repositories()
 
     for release in config.stack['releases']:
-        if ('ignore' in release and not release['ignore']) or 'ignore' not in release:
-            transform_set_to_file(release)
-            helm_upgrade(release)
+        transform_set_to_file(release)
+        helm_upgrade(release)
     unlink_garbage_files()
 
 
