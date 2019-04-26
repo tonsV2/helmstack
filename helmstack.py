@@ -73,13 +73,15 @@ def cli(environment, context, helm_binary, file, skip_repos, debug, dry_run):
 
 
 def trim_releases(targets):
+    stack = config.stack
     if len(targets):
-        stack = config.stack
         releases = stack['releases']
         stack['releases'] = [release for release in releases if release['name'] in targets]
         if config.debug:
             print("Trimmed stack:")
             pprint.pprint(config.stack)
+    if not len(stack['releases']):
+        print("WARNING: No releases found!")
 
 
 @cli.command()
