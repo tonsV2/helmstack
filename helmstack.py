@@ -15,6 +15,7 @@ class Config(object):
         self.environment = None
         self.context = None
         self.helm_binary = None
+        self.kubectl_binary = None
         self.file = None
         self.skip_repos = False
         self.debug = False
@@ -30,27 +31,33 @@ class Config(object):
 config = Config()
 
 
+def get_current_context():
+    return subprocess.run([config.kubectl_binary, 'config', 'current-context'], stdout=subprocess.PIPE).stdout.decode('utf-8').rstrip()
+
+
 @click.group()
 @click.option('--environment', '-e', default=None, help='Specify target environment')
 @click.option('--context', '-c', default=None, help='kubectl context')
 @click.option('--helm-binary', '-b', default='helm', help='Path to helm binary')
+@click.option('--kubectl-binary', '-k', default='kubectl', help='Path to kubectl binary')
 @click.option('--file', '-f', type=click.File('r'), default='helmstack.yaml', help='Specify stack file')
 @click.option('--skip-repos', is_flag=True, help='Skip adding repositories')
 @click.option('--debug', is_flag=True, help='Enable debug')
 @click.option('--dry-run', is_flag=True, help='Don\'t execute commands')
-def cli(environment, context, helm_binary, file, skip_repos, debug, dry_run):
+def cli(environment, context, helm_binary, kubectl_binary, file, skip_repos, debug, dry_run):
     """This script run helm commands"""
 
     config.environment = environment
     config.context = context
     config.helm_binary = helm_binary
+    config.kubectl_binary = kubectl_binary
     config.file = file
     config.skip_repos = skip_repos
     config.debug = debug
     config.dry_run = dry_run
 
     print("Environment: %s" % environment)
-    print("Context: %s" % context)
+    print("Context: %s" % (context if context else get_current_context()))
     print("Stack file: %s" % file.name)
 
     try:
