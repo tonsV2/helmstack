@@ -261,7 +261,8 @@ def to_file(value):
     if isinstance(value, str):
         fp.write(bytes(value, encoding='utf8'))
     else:
-        fp.write(bytes(yaml.dump(value), encoding='utf8'))
+        dump = yaml.round_trip_dump(value, None, default_style='"')
+        fp.write(bytes(dump, encoding='utf8'))
     return fp.name
 
 
