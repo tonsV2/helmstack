@@ -73,13 +73,24 @@ def cli(environment, context, helm_binary, file, skip_repos, debug, dry_run):
 
 
 def trim_releases(targets):
+    def trim_ignored(stack):
+        releases = [release for release in stack['releases'] if not release.get('ignore', False)]
+        return releases
+
+    def trim_non_targets(releases, targets):
+        if len(targets):
+            releases = [release for release in releases if release['name'] in targets]
+        return releases
+
     stack = config.stack
-    if len(targets):
-        releases = stack['releases']
-        stack['releases'] = [release for release in releases if release['name'] in targets]
-        if config.debug:
-            print("Trimmed stack:")
-            pprint.pprint(config.stack)
+    releases = trim_ignored(stack)
+    releases = trim_non_targets(releases, targets)
+
+    stack['releases'] = releases
+
+    if config.debug:
+        print("Trimmed stack:")
+        pprint.pprint(config.stack)
     if not len(stack['releases']):
         print("WARNING: No releases found!")
 
@@ -89,7 +100,7 @@ def trim_releases(targets):
 @click.option('--keep-tmp-value-files', is_flag=True, help='Don\'t clean up tmp value files')
 @click.argument('targets', nargs=-1, default=None)
 def sync(targets, recreate_pods, keep_tmp_value_files):
-    """Synchronise everything listed in the state file"""
+    """Synchronise one or more releases"""
 
     config.recreate_pods = recreate_pods
     config.keep_tmp_value_files = keep_tmp_value_files
@@ -102,9 +113,8 @@ def sync(targets, recreate_pods, keep_tmp_value_files):
         handle_repositories()
 
     for release in config.stack['releases']:
-        if ('ignore' in release and not release['ignore']) or 'ignore' not in release:
-            transform_set_to_file(release)
-            helm_upgrade(release)
+        transform_set_to_file(release)
+        helm_upgrade(release)
     unlink_garbage_files()
 
 
@@ -132,7 +142,7 @@ def unlink_garbage_files():
 @click.option('--all', is_flag=True, help='Confirm complete stack deletion')
 @click.argument('targets', nargs=-1, default=None)
 def delete(targets, purge, all):
-    """Delete everything listed in the state file"""
+    """Delete one or more releases"""
 
     if not targets and not all:
         exit_with_error("Can't delete entire stack without passing --all")
@@ -163,7 +173,7 @@ def helm_delete(release, purge):
 @cli.command()
 @click.argument('targets', nargs=-1, default=None)
 def get(targets):
-    """Get everything listed in the state file"""
+    """Show actual resources present in the cluster"""
 
     if config.environment:
         merge_overlays()
@@ -263,7 +273,8 @@ def to_file(value):
     if isinstance(value, str):
         fp.write(bytes(value, encoding='utf8'))
     else:
-        fp.write(bytes(yaml.dump(value), encoding='utf8'))
+        dump = yaml.round_trip_dump(value, None, default_style='"')
+        fp.write(bytes(dump, encoding='utf8'))
     return fp.name
 
 
