@@ -91,6 +91,8 @@ def trim_releases(targets):
     if config.debug:
         print("Trimmed stack:")
         pprint.pprint(config.stack)
+    if not len(stack['releases']):
+        print("WARNING: No releases found!")
 
 
 @cli.command()
