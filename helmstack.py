@@ -89,7 +89,9 @@ def trim_releases(targets):
 def sync(targets, recreate_pods, keep_tmp_value_files):
     """Synchronise everything listed in the state file"""
 
-    config.recreate_pods = recreate_pods
+    if recreate_pods:
+        config.recreate_pods = recreate_pods
+
     config.keep_tmp_value_files = keep_tmp_value_files
 
     if config.environment:
