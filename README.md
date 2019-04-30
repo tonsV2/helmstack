@@ -60,6 +60,24 @@ releases:
     ignore: true
 ```
 
+## Commands
+### Sync
+The ```sync``` command synchronizes everything in the stack file against the cluster
+
+Zero or more releases can be listed as arguments
+
+### Delete
+The ```sync``` command deletes one or more releases from the cluster,
+
+Zero or more releases can be listed as arguments
+
+
+### Get
+The ```sync``` command returns the json resource ofr one or more releases from the cluster,
+
+Zero or more releases can be listed as arguments
+
+
 ## Development setup
 ```bash
 virtualenv venv
