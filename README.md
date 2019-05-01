@@ -61,6 +61,8 @@ releases:
 ```
 
 ## Commands
+The following commands are supported by helmstack.
+
 ### Sync
 The ```sync``` command synchronizes everything in the stack file against the cluster
 
