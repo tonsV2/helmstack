@@ -223,7 +223,7 @@ def template(targets):
 
     trim_releases(targets)
     for release in config.stack['releases']:
-        helm_get(release)
+        helm_template(release)
 
 
 def helm_template(release):
@@ -235,7 +235,7 @@ def helm_template(release):
         exit_with_error("Release missing name attribute")
     name = release['name']
     cmd += " %s" % name
-    print("Getting: %s" % name)
+    print("Template: %s" % name)
     sh_exec(cmd)
 
 
