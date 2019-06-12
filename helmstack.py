@@ -123,7 +123,7 @@ def sync(targets, recreate_pods, keep_tmp_value_files):
     config.keep_tmp_value_files = keep_tmp_value_files
 
     if config.environment:
-        merge_overlays()
+        handle_overlays()
 
     trim_releases(targets)
     if not config.skip_repos:
@@ -165,7 +165,7 @@ def delete(targets, purge, all):
         exit_with_error("Can't delete entire stack without passing --all")
 
     if config.environment:
-        merge_overlays()
+        handle_overlays()
 
     trim_releases(targets)
     for release in config.stack['releases']:
@@ -193,7 +193,7 @@ def get(targets):
     """Download a named release"""
 
     if config.environment:
-        merge_overlays()
+        handle_overlays()
 
     trim_releases(targets)
     for release in config.stack['releases']:
@@ -219,7 +219,7 @@ def template(targets):
     """Render templates locally"""
 
     if config.environment:
-        merge_overlays()
+        handle_overlays()
 
     trim_releases(targets)
     for release in config.stack['releases']:
@@ -239,7 +239,7 @@ def helm_template(release):
     sh_exec(cmd)
 
 
-def merge_overlays():
+def handle_overlays():
     overlay_files = []
     environment = config.environment
 
