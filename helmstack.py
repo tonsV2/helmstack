@@ -213,6 +213,32 @@ def helm_get(release):
     sh_exec(cmd)
 
 
+@cli.command()
+@click.argument('targets', nargs=-1, default=None)
+def template(targets):
+    """Render templates locally"""
+
+    if config.environment:
+        merge_overlays()
+
+    trim_releases(targets)
+    for release in config.stack['releases']:
+        helm_get(release)
+
+
+def helm_template(release):
+    cmd = config.helm_binary
+    if config.context:
+        cmd += " --kube-context %s" % config.context
+    cmd += " template"
+    if 'name' not in release:
+        exit_with_error("Release missing name attribute")
+    name = release['name']
+    cmd += " %s" % name
+    print("Getting: %s" % name)
+    sh_exec(cmd)
+
+
 def merge_overlays():
     overlay_files = []
     environment = config.environment
