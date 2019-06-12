@@ -341,7 +341,7 @@ def sh_exec(cmd):
             sys.stdout.buffer.write(out)
             sys.stdout.flush()
     if p.returncode != 0:
-        exit_with_error("Helm returned non-zero return code")
+        print("Helm exited with non-zero return code (%s)" % p.returncode)
 
 
 def exit_with_error(err_msg):
