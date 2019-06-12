@@ -214,15 +214,30 @@ def helm_get(release):
 
 
 def merge_overlays():
-    if 'environments' not in config.stack:
-        exit_with_error("No environments found!")
+    overlay_files = []
     environment = config.environment
-    environments = config.stack['environments']
-    if environment not in environments:
-        exit_with_error("Environment '%s' not found!" % environment)
-    if 'overlay' not in environments[environment]:
-        exit_with_error("No overlay found in environment '%s'!" % environment)
-    overlay_files = environments[environment]['overlay']
+
+# By convention /env
+    env_file = "env/%s.yaml" % environment
+    if Path(env_file).is_file():
+        overlay_files.append(env_file)
+
+# By declaration
+    stack = config.stack
+    environments = {}
+    if 'environments' in stack:
+        environments = stack['environments']
+    if environment in environments and 'overlay' in environments[environment]:
+        overlay_files.extend(environments[environment]['overlay'])
+
+# Trim duplicates
+    overlay_files = set(overlay_files)
+
+# Check if environment specified but no overlays are present
+    if environment and not len(overlay_files):
+        exit_with_error("Environment specified by no overlays found found!")
+
+# Merge each overlay
     for overlay_file in overlay_files:
         with open(overlay_file, 'r') as stream:
             try:
