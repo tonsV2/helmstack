@@ -38,7 +38,7 @@ def get_current_context():
 @click.group()
 @click.option('--environment', '-e', default=None, help='Specify target environment')
 @click.option('--context', '-c', default=None, help='kubectl context')
-@click.option('--helm-binary', '-b', default='helm', help='Path to helm binary')
+@click.option('--helm-binary', '-b', default=None, help='Path to helm binary')
 @click.option('--kubectl-binary', '-k', default='kubectl', help='Path to kubectl binary')
 @click.option('--file', '-f', type=click.File('r'), default='helmstack.yaml', help='Specify stack file')
 @click.option('--skip-repos', is_flag=True, help='Skip adding repositories')
@@ -46,19 +46,6 @@ def get_current_context():
 @click.option('--dry-run', is_flag=True, help='Don\'t execute commands')
 def cli(environment, context, helm_binary, kubectl_binary, file, skip_repos, debug, dry_run):
     """This script run helm commands"""
-
-    config.environment = environment
-    config.context = context
-    config.helm_binary = helm_binary
-    config.kubectl_binary = kubectl_binary
-    config.file = file
-    config.skip_repos = skip_repos
-    config.debug = debug
-    config.dry_run = dry_run
-
-    print("Environment: %s" % environment)
-    print("Context: %s" % (context if context else get_current_context()))
-    print("Stack file: %s" % file.name)
 
     try:
         stack = yaml.safe_load(file)
@@ -77,6 +64,27 @@ def cli(environment, context, helm_binary, kubectl_binary, file, skip_repos, deb
                 config.recreate_pods = helm_defaults['recreatePods']
             if 'force' in helm_defaults:
                 config.force = helm_defaults['force']
+            if 'helmBinary' in helm_defaults:
+                config.helm_binary = helm_defaults['helmBinary']
+
+    config.environment = environment
+    config.context = context
+
+    if helm_binary is not None:
+        config.helm_binary = helm_binary
+    if helm_binary is None and config.helm_binary is None:
+        config.helm_binary = "helm"
+
+    config.kubectl_binary = kubectl_binary
+    config.file = file
+    config.skip_repos = skip_repos
+    config.debug = debug
+    config.dry_run = dry_run
+
+    print("Environment: %s" % environment)
+    print("Context: %s" % (context if context else get_current_context()))
+    print("Stack file: %s" % file.name)
+    print("Helm binary: %s" % config.helm_binary)
 
 
 def trim_releases(targets):
