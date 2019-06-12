@@ -182,7 +182,7 @@ def helm_delete(release, purge):
 @cli.command()
 @click.argument('targets', nargs=-1, default=None)
 def get(targets):
-    """Show actual resources present in the cluster"""
+    """Download a named release"""
 
     if config.environment:
         merge_overlays()
