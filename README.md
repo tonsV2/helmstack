@@ -9,7 +9,7 @@ Thus making it easy to deal with having one version in dev, another in test and 
 
 ## Install
 ```bash
-pip install helmstack
+pip3 install helmstack
 ```
 
 ## Stack file example
